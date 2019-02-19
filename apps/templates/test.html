@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+{# 使用jinja语法  if  #}
+{% if data.age == 21 %}
+    {{ data.name }}
+{% else %}
+    {{ data.age }}
+{% endif %}
+
+{# 使用for循环输出值 #}
+{% for foo in [1,2,3,4,5] %}
+    {{ foo }}
+{% endfor %}
+
+{# 使用key，value 循环输出值 #}
+{#{% for key,value in data.items %}#}
+{#    {{ key }}#}
+{#    {{ value }}#}
+{#{% endfor %}#}
+
+
+
+</body>
+</html>

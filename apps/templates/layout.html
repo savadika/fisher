@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='test.css') }}">
+</head>
+<body>
+{# 基础模板 #}
+{% block header %}
+    <div>this is header </div>
+{% endblock %}
+
+
+{% block content %}
+    <div>this is content </div>
+{% endblock %}
+
+
+{% block footer %}
+    <div>this is footer </div>
+{% endblock %}
+
+
+</body>
+</html>

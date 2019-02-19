@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+{#    {{ super() }}  {# 这段代码是用来继承content中的内容 #}
+    <div> my name is ylf </div>
+    {% if data.age == 19 %}
+        {{ data.name  }}
+    {% else %}
+        {{ data.school |default('20') }} {#  如果不存在,而不是默认 #}
+    {% endif %}
+    {% set messages = get_flashed_messages() %}
+    {{ messages }}
+{% endblock %}
