@@ -18,16 +18,19 @@ def my_gifts():
 @login_required
 def save_to_gifts(isbn):
     # 如何快速导入类：光标在这个类上，然后按alt+enter
-    gift = Gift()
-    gift.isbn = isbn
-    gift.uid = current_user.id  # current_user 实际上就是通过模型返回的USER类，里面有一个id
-    # 此处可以直接操作关联的user模型
-    print(current_user)
-    current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']
-    db.session.add(gift)  # 使用db.session来进行数据库的提交操作
-    db.session.commit()   # 问题：commit（）操作返回的是什么？
-    flash('你的书籍已经成功添加到赠送清单列表，赠人玫瑰，手有余香！')
-    return redirect(url_for('web.login'))
+    try:
+        gift = Gift()
+        gift.isbn = isbn
+        gift.uid = current_user.id  # current_user 实际上就是通过模型返回的USER类，里面有一个id
+        # 此处可以直接操作关联的user模型
+        print(current_user)
+        current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']
+        db.session.add(gift)  # 使用db.session来进行数据库的提交操作
+        db.session.commit()   # 问题：commit（）操作返回的是什么？
+        flash('你的书籍已经成功添加到赠送清单列表，赠人玫瑰，手有余香！')
+    except Exception as e:
+        db.session.rollback()
+        raise e
 
 
 @web.route('/gifts/<gid>/redraw')
