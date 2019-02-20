@@ -1,7 +1,21 @@
 # -*- coding:utf-8 -*-
 
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy
 from sqlalchemy import Column, SmallInteger
+from contextlib import contextmanager
+# 重度改写SQLAlchemy类，来新增一个方法实现自动处理异常
+
+
+class SQLAlchemy(_SQLAlchemy):
+    @contextmanager
+    def auto_commit(self):
+        try:
+            yield
+            self.session.commit()
+        except Exception as e:
+            self.session.rollback()
+            raise e
+
 
 db = SQLAlchemy()
 

@@ -14,10 +14,10 @@ def register():
     if request.method == 'GET':
         pass
     if request.method == 'POST' and validate_form.validate():
-        user = User()
-        user.set_attrs(validate_form.data)
-        db.session.add(user)
-        db.session.commit()
+        with db.auto_commit():
+            user = User()
+            user.set_attrs(validate_form.data)
+            db.session.add(user)
         return redirect(url_for('web.login'))  # 这个地方也必须要做一个return 返回才可以
     return render_template('auth/register.html', form=validate_form)
 
