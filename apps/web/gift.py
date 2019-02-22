@@ -4,6 +4,7 @@ from apps.models.gift import Gift
 from apps.models.user import User
 from . import web
 from flask_login import login_required, current_user
+from datetime import datetime
 __author__ = 'ylf'
 
 
@@ -22,8 +23,7 @@ def save_to_gifts(isbn):
         gift = Gift()
         gift.isbn = isbn
         gift.uid = current_user.id  # current_user 实际上就是通过模型返回的USER类，里面有一个id
-        # 此处可以直接操作关联的user模型
-        print(current_user)
+        gift.create_time = datetime.now()
         current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']
         db.session.add(gift)  # 使用db.session来进行数据库的提交操作
     return '111'
