@@ -10,3 +10,4 @@ class Gift(Base):
     uid = Column(Integer, ForeignKey('user.id'))  # 多的这个模型，这个是外键
     isbn = Column(String(15), nullable=False)
     launched = Column(Boolean, default=False)
+    create_time = Column(String(200), nullable=False)
