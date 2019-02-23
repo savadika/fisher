@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b3fe4e33-fc6c-4e2b-b34a-2298b6908e6e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/models/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/models/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/models/gift.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/models/gift.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/models/user.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/models/user.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/web/gift.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/web/gift.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -37,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/models/user.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="469">
-              <caret line="62" column="24" selection-start-line="62" selection-start-column="24" selection-end-line="62" selection-end-column="24" />
+            <state relative-caret-position="258">
+              <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
               <folding>
                 <element signature="e#1#34#0" expanded="true" />
               </folding>
@@ -377,12 +372,12 @@
       <workItem from="1550019127752" duration="7370000" />
       <workItem from="1550112760711" duration="14166000" />
       <workItem from="1550816042038" duration="6111000" />
-      <workItem from="1550912090434" duration="6254000" />
+      <workItem from="1550912090434" duration="6461000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168588000" />
+    <option name="totallyTimeSpent" value="168795000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -397,13 +392,13 @@
     <frame x="0" y="23" width="1440" height="801" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.75874126" visible="true" weight="0.26466382" />
-      <window_info id="Structure" order="1" sideWeight="0.24125874" side_tool="true" visible="true" weight="0.26466382" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.75868374" visible="true" weight="0.26466382" />
+      <window_info id="Structure" order="1" sideWeight="0.24131627" side_tool="true" visible="true" weight="0.26466382" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32863188" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49928468" weight="0.22849083" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.1932299" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49928468" visible="true" weight="0.22849083" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.1932299" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -463,11 +458,6 @@
           <url>file://$PROJECT_DIR$/apps/web/gift.py</url>
           <line>26</line>
           <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/apps/models/user.py</url>
-          <line>56</line>
-          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -846,8 +836,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/models/user.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
-          <caret line="62" column="24" selection-start-line="62" selection-start-column="24" selection-end-line="62" selection-end-column="24" />
+        <state relative-caret-position="258">
+          <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
           <folding>
             <element signature="e#1#34#0" expanded="true" />
           </folding>

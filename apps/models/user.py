@@ -53,14 +53,15 @@ class User(Base, UserMixin):
         result = ysbook.return_isbn(isbn)
         if isinstance(result, str):
             return False
+        # 这个id的用户有赠送或者索要该书籍，则不能再赠送
         gifting = Gift.query.filter_by(
             id=self.id, isbn=isbn, launched=False).first()
         wishing = Wish.query.filter_by(
             id=self.id, isbn=isbn, launched=False).first()
-        if not gifting and not wishing:
-            return True
-        else:
+        if gifting or wishing:
             return False
+        else:
+            return True
 
 
 # 此处不理解，虽然是强制要求实现的，但是为什么需要加这个，加了这个有什么意义？
