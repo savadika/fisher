@@ -22,7 +22,7 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         # 创建数据库表之前需要先引入模型
-        from apps.models import user, book, gift
+        from apps.models import user, book, gift, wish
         db.create_all()
 
     login_manager.init_app(app)

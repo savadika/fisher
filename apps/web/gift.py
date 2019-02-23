@@ -18,14 +18,14 @@ def my_gifts():
 @web.route('/gifts/book/<isbn>')
 @login_required
 def save_to_gifts(isbn):
-    # 如何快速导入类：光标在这个类上，然后按alt+enter
-    with db.auto_commit():
-        gift = Gift()
-        gift.isbn = isbn
-        gift.uid = current_user.id  # current_user 实际上就是通过模型返回的USER类，里面有一个id
-        gift.create_time = datetime.now()
-        current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']
-        db.session.add(gift)  # 使用db.session来进行数据库的提交操作
+    if current_user.can_save_to_list(isbn):
+        with db.auto_commit():
+            gift = Gift()
+            gift.isbn = isbn
+            gift.uid = current_user.id  # current_user 实际上就是通过模型返回的USER类，里面有一个id
+            gift.create_time = datetime.now()
+            current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']
+            db.session.add(gift)  # 使用db.session来进行数据库的提交操作
     return '111'
 
 
