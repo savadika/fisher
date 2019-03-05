@@ -3,7 +3,12 @@
 
 # 定义搜索方法，看能否成功
 from flask import jsonify, request, render_template, flash
+from flask_login import current_user
+
 from apps.apis.YuShuBook import YuShuBook
+from apps.models.gift import Gift
+from apps.models.wish import Wish
+from apps.view_models.trade import Tradeinfo
 from apps.web import web
 from apps.libs.helper import is_isbn_or_key
 from apps.forms.book import SearchForms
@@ -39,13 +44,37 @@ def search():
 
 @web.route('/book/<isbn>/detail')
 def book_detail(isbn):
+
+    # 表征数据的信息
+    has_in_gifts = False
+    has_in_wishes = False
+
     yushu = YuShuBook()
     result = yushu.return_isbn(isbn)
+
+    # 20190305 在页面中显示索要者和赠送者的名单
+    trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
+    trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
+
+    # 如果当前用户登陆了
+    if current_user.is_authenticated:
+        if Gift.query.filter_by(uid=current_user.id,isbn=isbn,launched=False).first():
+            has_in_gifts = True
+        if Wish.query.filter_by(uid=current_user.id,isbn=isbn,launched=False).first():
+            has_in_wishes = True
+
+    # 视图函数中需要展示的数据
+    trade_wishes_model = Tradeinfo(trade_gifts)
+    trade_gifts_model = Tradeinfo(trade_wishes)
+
     return render_template(
         'book_detail.html',
         book=result,
-        wishes=[],
-        gifts=[])
+        wishes=trade_wishes_model,
+        gifts=trade_gifts_model,
+        has_in_wishes=has_in_wishes,
+        has_in_gifts=has_in_gifts
+    )
     pass
 
 
