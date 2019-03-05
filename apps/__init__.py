@@ -26,6 +26,8 @@ def create_app():
         db.create_all()
 
     login_manager.init_app(app)
+    login_manager.login_view = 'web.login'  # 设置未登陆时的跳转页面
+    login_manager.login_message = '请先登陆或者注册'
     reg_blueprint(app)  # app上装载蓝图
     return app
 

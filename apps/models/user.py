@@ -55,9 +55,9 @@ class User(Base, UserMixin):
             return False
         # 这个id的用户有赠送或者索要该书籍，则不能再赠送
         gifting = Gift.query.filter_by(
-            id=self.id, isbn=isbn, launched=False).first()
+            uid=self.id, isbn=isbn,launched=False).first()
         wishing = Wish.query.filter_by(
-            id=self.id, isbn=isbn, launched=False).first()
+            uid=self.id, isbn=isbn, launched=False).first()
         if gifting or wishing:
             return False
         else:

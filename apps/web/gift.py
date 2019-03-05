@@ -26,7 +26,10 @@ def save_to_gifts(isbn):
             gift.create_time = datetime.now()
             current_user.beans += current_app.config['BEANS_UPLOAD_ONE_BOOK']
             db.session.add(gift)  # 使用db.session来进行数据库的提交操作
-    return '111'
+    else:
+        flash('您已经有书籍在赠送或者心愿清单中，请勿重复添加！')
+    # 此处注意url_for的写法
+    return redirect(url_for('web.book_detail', isbn=isbn))
 
 
 @web.route('/gifts/<gid>/redraw')
@@ -41,6 +44,8 @@ def gift_test_single():
     return gift.user.nickname
 
 # 查询一个人的所有礼物
+
+
 @web.route('/gift/test2')
 def gift_test_multiple():
     user = User.query.filter_by(id=17).first()

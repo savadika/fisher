@@ -32,6 +32,13 @@ def login():
         if user and user.check_password(validate_form.password.data):
             # 开始进行cookie的处理,写入到cookie
             login_user(user, remember=True)
+            # 跳转回原页面的处理
+            # 获取url中的参数就是登陆参数
+            # 如果next不存在且不是一个url地址，则跳向首页，否则跳向next
+            next = request.args.get('next')
+            if not next and next.startwith('/'):
+                next = url_for('web.index')
+            return redirect(next)
         else:
             flash('用户名或者密码不存在！')
     return render_template('auth/login.html', form={'data': {}})
