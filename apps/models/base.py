@@ -19,8 +19,8 @@ class SQLAlchemy(_SQLAlchemy):
 
 
 # 高级应用：改写fiter_by函数，实现自己的应用逻辑
-# 1 要搞清楚filter_by的继承关系
-# 2 如何显示基类的改写
+# 1 要搞清楚filter_by的继承关系,
+# 2 如何显示基类的改写，了解kwargs
 
 class ylfQuery(BaseQuery):
     def filter_by(self, **kwargs):
@@ -46,11 +46,16 @@ class Base(db.Model):
     # 如果我是在default中定义的，那么每个create_time都是一样的
     # 这个就是类变量和实例变量的区别之一
     def __init__(self):
-        self.create_time = String(datetime.now())
+        self.create_time = datetime.now().timestamp()
 
     # 定义一个共有的方法来完成属性的快速赋值
 
     def set_attrs(self, attrs_dict):
+     """
+     自动设置属性值
+     :param attrs_dict:字典
+     :return:NONE
+     """
         for key, value in attrs_dict.items():
             if hasattr(self, key) and key != 'id':
                 setattr(self, key, value)

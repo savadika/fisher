@@ -16,7 +16,7 @@ class BookViewModel:
 
     # 组装isbn查询出来的单本的数据
 
-    def get_isbn_book(self, data, keyword):
+    def get_isbn_book(self, data, keyword=''):
         if data:
             self.returned['total'] = 1
             self.returned['keyword'] = keyword
