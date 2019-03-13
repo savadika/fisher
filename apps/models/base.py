@@ -49,13 +49,7 @@ class Base(db.Model):
         self.create_time = datetime.now().timestamp()
 
     # 定义一个共有的方法来完成属性的快速赋值
-
     def set_attrs(self, attrs_dict):
-     """
-     自动设置属性值
-     :param attrs_dict:字典
-     :return:NONE
-     """
         for key, value in attrs_dict.items():
             if hasattr(self, key) and key != 'id':
                 setattr(self, key, value)

@@ -64,8 +64,8 @@ def book_detail(isbn):
             has_in_wishes = True
 
     # 视图函数中需要展示的数据
-    trade_wishes_model = Tradeinfo(trade_gifts)
-    trade_gifts_model = Tradeinfo(trade_wishes)
+    trade_wishes_model = Tradeinfo(trade_wishes)
+    trade_gifts_model = Tradeinfo(trade_gifts)
 
     return render_template(
         'book_detail.html',
@@ -75,7 +75,6 @@ def book_detail(isbn):
         has_in_wishes=has_in_wishes,
         has_in_gifts=has_in_gifts
     )
-    pass
 
 
 # 测试jinja2模板---------------------------------------------------------

@@ -2,6 +2,8 @@ from flask import current_app, flash, render_template, url_for, redirect
 from apps import db
 from apps.models.gift import Gift
 from apps.models.user import User
+from apps.models.wish import Wish
+from apps.view_models.gift import GiftViewModel
 from . import web
 from flask_login import login_required, current_user
 from datetime import datetime
@@ -9,12 +11,19 @@ __author__ = 'ylf'
 
 
 @web.route('/my/gifts')
-@login_required  # 要使用这个，必须在user模型中定义方法
+@login_required
 def my_gifts():
-    return '111'
-
+    '''
+    :return: 返回我的所有礼物，以及对应的wish的清单
+    '''
+    my_gift_list = Gift.gift_of_mine()
+    my_wish_count = Wish.gift_count_of_wishes(my_gift_list)
+    mygift = GiftViewModel(my_gift_list, my_wish_count)
+    return render_template('my_gifts.html', gifts=mygift.mygifts)
 
 #  赠送图书视图函数
+
+
 @web.route('/gifts/book/<isbn>')
 @login_required
 def save_to_gifts(isbn):

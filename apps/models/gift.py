@@ -1,4 +1,5 @@
 from flask import current_app
+from flask_login import current_user
 
 from apps.models.base import Base, db
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, desc
@@ -25,3 +26,17 @@ class Gift(Base):
             Gift.isbn).order_by(desc(Gift.create_time)).limit(
             current_app.config['COUNT_BOOKS']).distinct().all()
         return recent_gifts
+
+    @classmethod
+    def gift_of_mine(cls):
+        '''
+        通过当前用户的id返回当前用户的礼物的isbn列表
+        :param:当前的用户id号
+        :return: 当前的礼物的isbn列表
+        '''
+        uid = current_user.id
+        gifts = Gift.query.filter_by(uid=uid, status=1, launched=False
+                                     ).order_by(desc(Gift.create_time)
+                                                ).all()
+        my_gifs_isbn = [gift.isbn for gift in gifts]
+        return my_gifs_isbn
