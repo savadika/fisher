@@ -54,16 +54,18 @@ class Gift(Base):
             Gift.launched == False,
             Gift.isbn.in_(wishes_list),
             Gift.status == 1).group_by(Gift.isbn).all()
-        # 组装成需要的字典模式
+
 
         return_dict = []
-        for single_wish in wishes_list:
-            for gift_list in base_gift_dict:
-                if single_wish == gift_list[0]:
-                    return_dict.append(
-                        {'isbn': gift_list[0], 'count': gift_list[1]})
-                else:
-                    new_dict = {'isbn': single_wish, 'count': 0}
-                    return_dict.append(new_dict)
+        #  将已经查询出来的结果先进行组装
+        for gift in base_gift_dict:
+            return_dict.append({'isbn':gift[0],'count':gift[1]})
+
+        #  比较不在列表中的元素，并将其添加到return_dict
+        new_base_gift_list = [base[0] for base in base_gift_dict]
+        diff = [x for x in wishes_list if x not in new_base_gift_list]
+
+        for single_diff in diff:
+            return_dict.append({'isbn':single_diff,'count':0})
 
         return return_dict
