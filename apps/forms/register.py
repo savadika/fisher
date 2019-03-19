@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from wtforms import StringField, PasswordField, Form
-from wtforms.validators import Length, DataRequired, Email, ValidationError
+from wtforms.validators import Length, DataRequired, Email, ValidationError,EqualTo
 from apps.models.user import User
 
 
@@ -52,16 +52,21 @@ class LoginFrom(Form):
                 6, 20, message='密码在6-20位之间')])
 
 
+class ResetPassword(Form):
+    email = StringField(
+        validators=[
+            DataRequired(), Length(
+                8, 64), Email(
+                message='电子邮件不符合规则')])
 
 
-
-
-
-
-
-
-
-
-
-
-
+class ConfirmPassword(Form):
+    password1 = StringField(
+        validators=[
+            DataRequired(), Length(
+                6, 20, message='密码在6-20位之间'),
+            EqualTo('password2',message='两次输入的密码不相同')])
+    password2 = StringField(
+        validators=[
+            DataRequired(), Length(
+                6, 20, message='密码在6-20位之间')])

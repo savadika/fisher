@@ -1,11 +1,13 @@
 from datetime import datetime
 
-from flask import url_for, flash
+from flask import url_for, flash, render_template
 from flask_login import current_user
 from werkzeug.utils import redirect
 
 from apps import db
+from apps.models.gift import Gift
 from apps.models.wish import Wish
+from apps.view_models.wish import WishViewModel
 from . import web
 
 __author__ = '七月'
@@ -13,9 +15,18 @@ __author__ = '七月'
 
 @web.route('/my/wish')
 def my_wish():
-    pass
+    '''
+    我的心愿清单
+    :return:
+    '''
+    wish_isbn_list = Wish.get_wishes_of_mine()
+    gifts_of_wishes = Gift.gift_count_of_my_wishes(wish_isbn_list)
+    gifts = WishViewModel(wish_isbn_list, gifts_of_wishes)
+    return render_template('my_wish.html', wishes=gifts.my_wishes)
 
 # 保存到心愿清单
+
+
 @web.route('/wish/book/<isbn>')
 def save_to_wish(isbn):
     if current_user.can_save_to_list(isbn):

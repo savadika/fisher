@@ -1,5 +1,6 @@
+from flask import current_app
 
-from apps.models.base import Base
+from apps.models.base import Base, db
 from sqlalchemy import Column, String, Boolean, Float, Integer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -8,6 +9,7 @@ from ..libs.helper import is_isbn_or_key
 from ..apis.YuShuBook import YuShuBook
 from .gift import Gift
 from .wish import Wish
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
 class User(Base, UserMixin):
@@ -62,6 +64,36 @@ class User(Base, UserMixin):
             return False
         else:
             return True
+
+
+
+    def generate_token(self,expration=600):
+        '''
+        定义重置密码时token的生成，可以用来进行加密id的操作
+        :param expration:过期时间，默认600秒
+        :return:
+        '''
+        s = Serializer(current_app.config['SECRET_KEY'],expration)
+        return s.dumps({'id':self.id}).decode('utf-8')
+
+    @classmethod
+    def reset_password(cls,token,new_password):
+        '''
+        根据token以及新密码，来重置用户的密码
+        :param token: 用户的token
+        :param new_password: 新密码
+        :return: 返回是否成功的状态值
+        '''
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data=s.loads(token.encode('utf-8'))
+        except:
+            return False
+        uid = data.get('id')
+        with db.auto_commit():
+            user = User.query.get(uid)
+            user.password = new_password
+        return  True
 
 
 # 此处不理解，虽然是强制要求实现的，但是为什么需要加这个，加了这个有什么意义？

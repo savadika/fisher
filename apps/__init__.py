@@ -6,10 +6,14 @@ from flask import Flask
 from apps.models.base import db
 from flask_login import LoginManager
 
+#导入邮件
+from flask_mail import Mail
+
 # 导入数据库迁移类
 from flask_migrate import Migrate
 
 # apps下app的实例化初始工作都在此完成
+mail = Mail()
 login_manager = LoginManager()
 
 
@@ -29,6 +33,7 @@ def create_app():
     login_manager.login_view = 'web.login'  # 设置未登陆时的跳转页面
     login_manager.login_message = '请先登陆或者注册'
     reg_blueprint(app)  # app上装载蓝图
+    mail.init_app(app)
     return app
 
 #  定义app的注册蓝图的方法，这个可以等蓝图以后慢慢加

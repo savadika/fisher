@@ -1,6 +1,7 @@
+from flask_login import current_user
 
 from apps.models.base import Base, db
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, func
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, func, desc
 from sqlalchemy.orm import relationship, backref
 
 
@@ -19,7 +20,7 @@ class Wish(Base):
         :param isbn_list:
         :return: [{'isbn':,'count':}]
         '''
-        base_wish_dict=db.session.query(
+        base_wish_dict = db.session.query(
             Wish.isbn,
             func.count(Wish.id)).filter(
             Wish.launched == False,
@@ -27,5 +28,29 @@ class Wish(Base):
             Wish.status == 1).group_by(
             Wish.isbn).all()
 
-        return_wish_dict = [ {'isbn':wish_dict[0],'count':wish_dict[1]} for wish_dict in base_wish_dict]
-        return  return_wish_dict
+        return_dict = []
+        for single_list in isbn_list:
+            for wish_list in base_wish_dict:
+                if single_list == wish_list[0]:
+                    return_dict.append({'isbn': wish_list[0], 'count': wish_list[1]})
+                else:
+                    new_dict = {'isbn': single_list, 'count': 0}
+                    return_dict.append(new_dict)
+
+        return return_dict
+
+    @classmethod
+    def get_wishes_of_mine(self):
+        '''
+        根据当前用户的id返回心愿清单列表
+        :return: 心愿清单的isbn列表
+        '''
+        whishes_isbn_list = []
+        uid = current_user.id
+        wishes_list = Wish.query.filter_by(
+            uid=uid, launched=False).order_by(
+            desc(
+                Wish.create_time)).all()
+        for wish in wishes_list:
+            whishes_isbn_list.append(wish.isbn)
+        return whishes_isbn_list
