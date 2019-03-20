@@ -3,9 +3,19 @@
 '''
 定义一个电子邮件的发送方法
 '''
+from threading import Thread
+
 from flask import current_app, render_template
 from flask_mail import Message
 from apps import mail
+
+
+def sync_send_mail(newapp, msg):
+    with newapp.app_context():
+        try:
+            mail.send(msg)
+        except Exception as e:
+            pass
 
 
 def send_email(to, subject, template, **kwargs):
@@ -23,4 +33,7 @@ def send_email(to, subject, template, **kwargs):
                   recipients=[to])
     # 定义邮件的模板发送格式
     msg.html = render_template(template, **kwargs)
-    mail.send(msg)
+    # 开启一个线程，来异步发送电子邮件
+    flaskapp = current_app._get_current_object()
+    thr = Thread(target=sync_send_mail, args=[flaskapp, msg])
+    thr.start()

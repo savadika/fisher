@@ -4,6 +4,7 @@ from apps.forms.register import RegisterForm, LoginFrom, ResetPassword, ConfirmP
 from apps.models.user import User
 from apps.models.base import db
 from flask_login import login_user, logout_user
+from apps.libs.email import send_email
 
 __author__ = 'ylf'
 
@@ -57,12 +58,12 @@ def forget_password_request():
             # 有助于判空操作，结合aop面向切面编程，可以减少代码量
             user = User.query.filter_by(
                 email=validate_form.email.data).first_or_404()
-            from apps.libs.email import send_email
             send_email(validate_form.email.data,
                        '请重置你的密码',
                        'email/reset_password.html',
                        user=user,
                        token=user.generate_token())
+            flash('一封邮件已经发送到您的邮箱，请注意查收！')
     return render_template('auth/forget_password_request.html',form=validate_form)
 
 
