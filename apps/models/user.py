@@ -16,7 +16,7 @@ class User(Base, UserMixin):
     id = Column(Integer, primary_key=True)
     nickname = Column(String(24), nullable=False)
     phone_number = Column(String(18), unique=True)
-    _password = Column('password', String(128))
+    _password = Column('password', String(128))  #定义列名
     email = Column(String(18), unique=True, nullable=False)
     confirmed = Column(Boolean, default=False)
     beans = Column(Float, default=0)
