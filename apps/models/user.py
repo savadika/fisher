@@ -1,10 +1,14 @@
+from math import floor
+
 from flask import current_app
 
+from apps.libs.enums import PendingStatus
 from apps.models.base import Base, db
 from sqlalchemy import Column, String, Boolean, Float, Integer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from apps import login_manager
+from apps.models.drift import Drift
 from ..libs.helper import is_isbn_or_key
 from ..apis.YuShuBook import YuShuBook
 from .gift import Gift
@@ -16,7 +20,7 @@ class User(Base, UserMixin):
     id = Column(Integer, primary_key=True)
     nickname = Column(String(24), nullable=False)
     phone_number = Column(String(18), unique=True)
-    _password = Column('password', String(128))  #定义列名
+    _password = Column('password', String(128))  # 定义列名
     email = Column(String(18), unique=True, nullable=False)
     confirmed = Column(Boolean, default=False)
     beans = Column(Float, default=0)
@@ -57,7 +61,7 @@ class User(Base, UserMixin):
             return False
         # 这个id的用户有赠送或者索要该书籍，则不能再赠送
         gifting = Gift.query.filter_by(
-            uid=self.id, isbn=isbn,launched=False).first()
+            uid=self.id, isbn=isbn, launched=False).first()
         wishing = Wish.query.filter_by(
             uid=self.id, isbn=isbn, launched=False).first()
         if gifting or wishing:
@@ -65,19 +69,47 @@ class User(Base, UserMixin):
         else:
             return True
 
+    @property
+    def summary(self):
+        """
+        返回鱼漂页面所需要的用户的信息
+        :return:
+        """
+        return dict(
+            nickname=self.nickname,
+            beans=self.beans,
+            email=self.email,
+            send_receive=str(self.send_counter)+'/'+str(self.receive_counter)
+        )
 
 
-    def generate_token(self,expration=600):
+    def can_send_drift(self):
+        """
+        能发起书籍的请求
+        :return: True|False
+        """
+        # 自己索取的图书 drift
+        my_get_books = Drift.query.filter_by(
+            requester_id=self.id, pending=PendingStatus.Success).count()
+        # 自己送出的图书  gift
+        my_send_book = Gift.query.filter_by(
+            uid=self.id, launched=True).count()
+        if floor(my_get_books / 2) <= floor(my_send_book):
+            return True
+        else:
+            return False
+
+    def generate_token(self, expration=600):
         '''
         定义重置密码时token的生成，可以用来进行加密id的操作
         :param expration:过期时间，默认600秒
         :return:
         '''
-        s = Serializer(current_app.config['SECRET_KEY'],expration)
-        return s.dumps({'id':self.id}).decode('utf-8')
+        s = Serializer(current_app.config['SECRET_KEY'], expration)
+        return s.dumps({'id': self.id}).decode('utf-8')
 
     @classmethod
-    def reset_password(cls,token,new_password):
+    def reset_password(cls, token, new_password):
         '''
         根据token以及新密码，来重置用户的密码
         :param token: 用户的token
@@ -86,14 +118,14 @@ class User(Base, UserMixin):
         '''
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data=s.loads(token.encode('utf-8'))
-        except:
+            data = s.loads(token.encode('utf-8'))
+        except BaseException:
             return False
         uid = data.get('id')
         with db.auto_commit():
             user = User.query.get(uid)
             user.password = new_password
-        return  True
+        return True
 
 
 # 此处不理解，虽然是强制要求实现的，但是为什么需要加这个，加了这个有什么意义？

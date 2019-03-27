@@ -1,6 +1,7 @@
 from flask import current_app
 from flask_login import current_user
 
+from apps.apis.YuShuBook import YuShuBook
 from apps.models.base import Base, db
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, desc, func
 from sqlalchemy.orm import relationship, backref
@@ -55,17 +56,23 @@ class Gift(Base):
             Gift.isbn.in_(wishes_list),
             Gift.status == 1).group_by(Gift.isbn).all()
 
-
         return_dict = []
         #  将已经查询出来的结果先进行组装
         for gift in base_gift_dict:
-            return_dict.append({'isbn':gift[0],'count':gift[1]})
+            return_dict.append({'isbn': gift[0], 'count': gift[1]})
 
         #  比较不在列表中的元素，并将其添加到return_dict
         new_base_gift_list = [base[0] for base in base_gift_dict]
         diff = [x for x in wishes_list if x not in new_base_gift_list]
 
         for single_diff in diff:
-            return_dict.append({'isbn':single_diff,'count':0})
+            return_dict.append({'isbn': single_diff, 'count': 0})
 
         return return_dict
+
+    @classmethod
+    def book(cls,isbn):
+        """返回isbn查询出来的书籍结果"""
+        yushu = YuShuBook()
+        result = yushu.return_isbn(isbn)
+        return result

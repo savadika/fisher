@@ -46,7 +46,7 @@
                                     <input placeholder="请填写收件人姓名" id="recipient_name"
                                            name="recipient_name"
                                            class="normal-input btn-block form-control"
-                                           value="{{ form.recipient_name.data | default('', true) }}">
+                                           value="">
                                 </div>
                             </div>
                             <label class="sub-title-color" for="mobile">联系电话</label>
@@ -55,17 +55,17 @@
                                     <input placeholder="如13818181818" id="mobile"
                                            name="mobile"
                                            class="normal-input btn-block form-control"
-                                           value="{{ form.mobile.data | default('', true) }}">
+                                           value="">
                                 </div>
                             </div>
                             <label class="sub-title-color" for="address">书籍收件地址</label>
                     <textarea class="form-control" rows="3" id="address" name="address"
-                              placeholder="如，张三 北京市清华大学666室。请务必确保该地址能够收到书籍">{{ form.address.data | default('',true) }}</textarea>
+                              placeholder="如，张三 北京市清华大学666室。请务必确保该地址能够收到书籍"></textarea>
                             <label class="sub-title-color" for="message">对他 / 她
                                 说的话</label>
                         <textarea class="form-control" id="message" name="message"
                                   rows="4"
-                                  placeholder="如有一些特别的要求，可以在这里填写">{{ form.message.data | default('',true) }}</textarea>
+                                  placeholder="如有一些特别的要求，可以在这里填写"></textarea>
                         </div>
                     </div>
                     <div class="row">

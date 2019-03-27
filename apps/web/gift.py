@@ -46,6 +46,7 @@ def redraw_from_gifts(gid):
     pass
 
 
+
 # 查询一个礼物的所有者
 @web.route('/gift/test1')
 def gift_test_single():
