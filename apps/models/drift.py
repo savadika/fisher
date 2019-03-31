@@ -33,7 +33,7 @@ class Drift(Base):
 
     # 索要人信息
     requester_id = Column(Integer)
-    requester_nickname = (String(20))
+    requester_nickname = Column(String(20))
 
     # 交易状态，利用枚举类型来进行设置
     pending = Column('pending', Integer, default=1)

@@ -1,5 +1,6 @@
 from flask import url_for, render_template, flash, request
 from flask_login import login_required, current_user
+from sqlalchemy import desc, or_
 from werkzeug.utils import redirect
 
 from apps import db
@@ -8,6 +9,7 @@ from apps.libs.email import send_email
 from apps.libs.enums import PendingStatus
 from apps.models.drift import Drift
 from apps.models.gift import Gift
+from apps.view_models.drift import DriftViewModel
 from . import web
 
 __author__ = '七月'
@@ -26,6 +28,7 @@ def send_drift(gid):
     :return:跳转到交易成功页面
     """
     mygift = Gift.query.get_or_404(gid)
+    title = Gift.book(mygift.isbn)['title']
     if request.method == "GET":
         if mygift.uid == current_user.id:
             flash('亲，自己不能向自己赠送书籍哦，请不要调皮！')
@@ -52,18 +55,29 @@ def send_drift(gid):
         if drift_form.validate():
             save_drift(drift_form, mygift)
             # 成功请求书籍以后，向书籍的所有者发送一封电子邮件
-            # send_email(
-            #     mygift.user.email,
-            #     '有人想要一本书',
-            #     'email/get_gift.html',
-            #     wisher=current_user,
-            #     gift=mygift)
+            send_email(
+                mygift.user.email,
+                '有人想要一本书',
+                'email/get_gift.html',
+                wisher=current_user,
+                gift=mygift,
+                title=title)
+            flash('已有一封邮件发送到赠书者的邮箱，请耐心等待哦！')
+            return redirect('web.pending')
     return redirect(url_for('web.index'))
 
 
 @web.route('/pending')
+@login_required
 def pending():
-    pass
+    """返回我作为赠送者或者作为请求者的交易信息记录"""
+    # fllter里面的查询条件的值需要带上所有的Drift的前缀
+    drifts = Drift.query.filter(
+        or_(Drift.requester_id == current_user.id,
+            Drift.gifter_id == current_user.id)).order_by(
+        desc(Drift.create_time)).all()
+    mydrifts = DriftViewModel(drifts, current_user.id)
+    return render_template('pending.html', drifts=mydrifts.data)
 
 
 @web.route('/drift/<int:did>/reject')
