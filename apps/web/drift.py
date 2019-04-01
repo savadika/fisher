@@ -63,7 +63,7 @@ def send_drift(gid):
                 gift=mygift,
                 title=title)
             flash('已有一封邮件发送到赠书者的邮箱，请耐心等待哦！')
-            return redirect('web.pending')
+            return redirect(url_for('web.pending'))
     return redirect(url_for('web.index'))
 
 
