@@ -10,6 +10,7 @@ from apps.libs.enums import PendingStatus
 from apps.models.drift import Drift
 from apps.models.gift import Gift
 from apps.models.user import User
+from apps.models.wish import Wish
 from apps.view_models.drift import DriftViewModel
 from . import web
 
@@ -82,6 +83,7 @@ def pending():
 
 
 @web.route('/drift/<int:did>/reject')
+@login_required
 def reject_drift(did):
     """
     （赠送者）拒绝当前的交易
@@ -117,8 +119,22 @@ def redraw_drift(did):
 
 @web.route('/drift/<int:did>/mailed')
 def mailed_drift(did):
-    pass
-
+    """
+    点击已邮寄，完成此次交易，注意，要讲赠送清单与心愿清单同样撤销掉
+    :param did:
+    :return:
+    """
+    with db.auto_commit():
+        drift = Drift.query.filter_by(id=did).first_or_404()
+        drift.pending=PendingStatus.Success.value
+        # 撤销赠送者的礼物(Gift)
+        gift = Gift.query.filter_by(id=drift.gift_id).first_or_404()
+        gift.launched=True
+        # 撤销请求者的心愿（Wish）
+        wish = Wish.query.filter_by(
+            isbn=drift.isbn,uid=drift.requester_id,launched=False).first_or_404()
+        wish.launched=True
+    return redirect(url_for('web.pending'))
 
 # --------------------------------------------------------------------
 
