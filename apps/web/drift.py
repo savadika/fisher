@@ -9,6 +9,7 @@ from apps.libs.email import send_email
 from apps.libs.enums import PendingStatus
 from apps.models.drift import Drift
 from apps.models.gift import Gift
+from apps.models.user import User
 from apps.view_models.drift import DriftViewModel
 from . import web
 
@@ -82,7 +83,19 @@ def pending():
 
 @web.route('/drift/<int:did>/reject')
 def reject_drift(did):
-    pass
+    """
+    （赠送者）拒绝当前的交易
+    :param did: 礼物id号
+    :return:返回拒绝信息到当前的页面
+    """
+    with db.auto_commit():
+        drift = Drift.query.filter(
+            Drift.id == did, Gift.uid == current_user.id).first_or_404()
+        drift.pending = PendingStatus.Reject.value
+    # 如果拒绝了这个交易，那么请求者的鱼豆需要+1(将鱼豆还给他)
+        requester = User.query.get_or_404(drift.requester_id)
+        requester.beans += 1
+    return redirect(url_for('web.pending'))
 
 
 @web.route('/drift/<int:did>/redraw')
@@ -94,7 +107,8 @@ def redraw_drift(did):
     为了防止超权现象(通过自定义的URL来操作别人的鱼漂)，还必须加一个requester.id =current_user.id
     """
     with db.auto_commit():
-        drift = Drift.query.filter_by(id=did,requester_id=current_user.id).first_or_404()
+        drift = Drift.query.filter_by(
+            id=did, requester_id=current_user.id).first_or_404()
         # 需要特别注意的是，直接读取PendingStatus.Redraw读出来的是枚举类型，需要增加.value才是真实的值
         drift.pending = PendingStatus.Redraw.value
         current_user.beans += 1

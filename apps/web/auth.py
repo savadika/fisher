@@ -37,7 +37,7 @@ def login():
             # 获取url中的参数就是登陆参数
             # 如果next不存在且不是一个url地址，则跳向首页，否则跳向next
             next = request.args.get('next')
-            if not next or not next.startwith('/'):
+            if not next or not next.startswith('/'):
                 next = url_for('web.index')
             return redirect(next)
         else:
