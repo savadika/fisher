@@ -94,8 +94,7 @@ def redraw_drift(did):
     为了防止超权现象(通过自定义的URL来操作别人的鱼漂)，还必须加一个requester.id =current_user.id
     """
     with db.auto_commit():
-        drift = Drift.query.filter_by(
-            current_user.id=requester.id, Drift.id=did).first_or_404()
+        drift = Drift.query.filter_by(id=did,requester_id=current_user.id).first_or_404()
         # 需要特别注意的是，直接读取PendingStatus.Redraw读出来的是枚举类型，需要增加.value才是真实的值
         drift.pending = PendingStatus.Redraw.value
         current_user.beans += 1
