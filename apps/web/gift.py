@@ -1,5 +1,7 @@
 from flask import current_app, flash, render_template, url_for, redirect
 from apps import db
+from apps.libs.enums import PendingStatus
+from apps.models.drift import Drift
 from apps.models.gift import Gift
 from apps.models.user import User
 from apps.models.wish import Wish
@@ -43,8 +45,22 @@ def save_to_gifts(isbn):
 
 @web.route('/gifts/<gid>/redraw')
 def redraw_from_gifts(gid):
-    pass
-
+    """
+    撤销礼物-前置条件，先判断鱼漂的操作是否是等待操作
+    :param gid:
+    :return:
+    """
+    gift = Gift.query.filter_by(id=gid).first_or_404()
+    drift = Drift.query.filter_by(gift_id=gift.id).first()
+    if drift and drift.pending == PendingStatus.Waiting.value:
+        flash('您还有交易没有完成，请先完成交易再撤销礼物')
+    else:
+        with db.auto_commit():
+            # 返回鱼豆
+            current_user.beans -= current_app.config['BEANS_UPLOAD_ONE_BOOK']
+            # 删除礼物
+            gift.delete()
+    return redirect(url_for('web.my_gifts'))
 
 
 # 查询一个礼物的所有者

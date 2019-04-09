@@ -53,3 +53,8 @@ class Base(db.Model):
         for key, value in attrs_dict.items():
             if hasattr(self, key) and key != 'id':
                 setattr(self, key, value)
+
+
+    #定义删除操作，如果删除，就是把status设置为0
+    def delete(self):
+        self.status = 0

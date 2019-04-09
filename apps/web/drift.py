@@ -128,12 +128,14 @@ def mailed_drift(did):
         drift = Drift.query.filter_by(id=did).first_or_404()
         drift.pending=PendingStatus.Success.value
         # 撤销赠送者的礼物(Gift)
-        gift = Gift.query.filter_by(id=drift.gift_id).first_or_404()
-        gift.launched=True
+        gift = Gift.query.filter_by(id=drift.gift_id).first()
+        if gift:
+            gift.launched=True
         # 撤销请求者的心愿（Wish）
         wish = Wish.query.filter_by(
-            isbn=drift.isbn,uid=drift.requester_id,launched=False).first_or_404()
-        wish.launched=True
+            isbn=drift.isbn,uid=drift.requester_id,launched=False).first()
+        if wish:
+            wish.launched=True
     return redirect(url_for('web.pending'))
 
 # --------------------------------------------------------------------
